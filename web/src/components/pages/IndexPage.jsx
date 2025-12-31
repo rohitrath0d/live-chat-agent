@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
-import ChatPanel from "@/components/ChatPanel";
-import ChatInput from "@/components/ChatInput";
+import ChatPanel from "@/components/chat-interface/ChatPanel";
+import ChatInput from "@/components/chat-interface/ChatInput";
 import { MessageSquare } from "lucide-react";
 
 const Index = () => {

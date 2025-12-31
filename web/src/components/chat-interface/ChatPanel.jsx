@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import ChatMessage from "./ChatMessage";
-import TypingIndicator from "./TypingIndicator";
+import TypingIndicator from "../ui/TypingIndicator";
 
 const ChatPanel = ({ messages, isLoading }) => {
   const scrollRef = useRef(null);
