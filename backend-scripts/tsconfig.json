@@ -2,7 +2,7 @@
   // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
     // File Layout
-    "rootDir": "./src",
+    // "rootDir": "./src",    --> this was raising conflicting errors for prisma.config.ts - it being outside src
     "outDir": "./dist/src",
 
     // Environment Settings
@@ -48,12 +48,19 @@
     // "allowImportingTsExtensions":  true,
     "allowImportingTsExtensions":  false,
 
+
+    // using ES modules ("type": "module" in package.json).
+    // TypeScript config does not have esModuleInterop: true.
+    // Prisma client, when generated for ESM without interop, does not provide a named export. -> Instead, it uses a default export, so TS cannot find PrismaClient as a named export.
+    // Sometimes also happens if the Prisma client hasn’t been generated yet or output path is misconfigured.
+    "esModuleInterop": true,
+
     "allowJs": false,
     "forceConsistentCasingInFileNames": true,
 
     "downlevelIteration": true
   },
-  "include": ["src/**/*", "types", "src/types/**/*"],      // Include all `.ts` files in the `src` folder
+  "include": ["src/**/*", "types", "src/types/**/*", "prisma.config.ts"],      // Include all `.ts` files in the `src` folder
   "exclude": ["node_modules"]   // Exclude the `node_modules` folder
 
 }
