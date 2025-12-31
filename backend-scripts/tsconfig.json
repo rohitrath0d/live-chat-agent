@@ -2,17 +2,17 @@
   // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
     // File Layout
-    // "rootDir": "./src",
-    // "outDir": "./dist",
+    "rootDir": "./src",
+    "outDir": "./dist/src",
 
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
     "module": "nodenext",
     "target": "esnext",
-    "types": [],
+    // "types": [],
     // For nodejs:
-    // "lib": ["esnext"],
-    // "types": ["node"],
+    "lib": ["esnext"],
+    "types": ["node", "express"],
     // and npm install -D @types/node
 
     // Other Outputs
@@ -25,10 +25,10 @@
     "exactOptionalPropertyTypes": true,
 
     // Style Options
-    // "noImplicitReturns": true,
+    "noImplicitReturns": true,
     // "noImplicitOverride": true,
-    // "noUnusedLocals": true,
-    // "noUnusedParameters": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     // "noFallthroughCasesInSwitch": true,
     // "noPropertyAccessFromIndexSignature": true,
 
@@ -40,5 +40,20 @@
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true,
-  }
+
+    "resolveJsonModule": true, // Allow importing JSON files as modules
+
+    "noEmit": false,           // Don't emit output files (useful when using tsc for type-checking only) 
+    "emitDeclarationOnly": false,
+    // "allowImportingTsExtensions":  true,
+    "allowImportingTsExtensions":  false,
+
+    "allowJs": false,
+    "forceConsistentCasingInFileNames": true,
+
+    "downlevelIteration": true
+  },
+  "include": ["src/**/*", "types", "src/types/**/*"],      // Include all `.ts` files in the `src` folder
+  "exclude": ["node_modules"]   // Exclude the `node_modules` folder
+
 }
