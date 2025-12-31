@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "seed": "ts-node prisma/seed.ts"
+    "seed": "node prisma/seed.ts"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +19,7 @@
     "express": "^5.2.1",
     "pg": "^8.16.3",
     "prisma": "^7.2.0",
+    "redis": "^5.10.0",
     "socket.io": "^4.8.3"
   },
   "devDependencies": {

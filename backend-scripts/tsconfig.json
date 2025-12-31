@@ -4,26 +4,27 @@
     // File Layout
     // "rootDir": "./src",    --> this was raising conflicting errors for prisma.config.ts - it being outside src
     "outDir": "./dist/src",
-
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
     "module": "nodenext",
     "target": "esnext",
     // "types": [],
     // For nodejs:
-    "lib": ["esnext"],
-    "types": ["node", "express"],
+    "lib": [
+      "esnext"
+    ],
+    "types": [
+      "node",
+      "express"
+    ],
     // and npm install -D @types/node
-
     // Other Outputs
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
-
     // Stricter Typechecking Options
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
-
     // Style Options
     "noImplicitReturns": true,
     // "noImplicitOverride": true,
@@ -31,7 +32,6 @@
     "noUnusedParameters": true,
     // "noFallthroughCasesInSwitch": true,
     // "noPropertyAccessFromIndexSignature": true,
-
     // Recommended Options
     "strict": true,
     // "jsx": "react-jsx",
@@ -40,27 +40,30 @@
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true,
-
     "resolveJsonModule": true, // Allow importing JSON files as modules
-
-    "noEmit": false,           // Don't emit output files (useful when using tsc for type-checking only) 
+    // "noEmit": false,           // Don't emit output files (useful when using tsc for type-checking only)\
+    "noEmit": true, // Don't emit JS output
     "emitDeclarationOnly": false,
     // "allowImportingTsExtensions":  true,
-    "allowImportingTsExtensions":  false,
-
-
+    "allowImportingTsExtensions": false,
     // using ES modules ("type": "module" in package.json).
     // TypeScript config does not have esModuleInterop: true.
     // Prisma client, when generated for ESM without interop, does not provide a named export. -> Instead, it uses a default export, so TS cannot find PrismaClient as a named export.
     // Sometimes also happens if the Prisma client hasn’t been generated yet or output path is misconfigured.
     "esModuleInterop": true,
-
-    "allowJs": false,
+    "moduleResolution": "nodenext", // Ensure Node-style resolution
+    // "allowJs": false,
+    "allowJs": true,
     "forceConsistentCasingInFileNames": true,
-
     "downlevelIteration": true
   },
-  "include": ["src/**/*", "types", "src/types/**/*", "prisma.config.ts"],      // Include all `.ts` files in the `src` folder
-  "exclude": ["node_modules"]   // Exclude the `node_modules` folder
-
+  "include": [
+    "src/**/*",
+    "types",
+    "src/types/**/*",
+    "prisma.config.ts"
+  ], // Include all `.ts` files in the `src` folder
+  "exclude": [
+    "node_modules"
+  ] // Exclude the `node_modules` folder
 }
