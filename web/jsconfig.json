@@ -1,8 +1,11 @@
 {
+  "jsx": "react", // or "react-jsx" for React 17 and later
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": [
+        "src/*"
+      ]
     }
   }
 }
