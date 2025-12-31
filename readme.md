@@ -1,0 +1,5 @@
+[v7 Instantiating Prisma Client doc](https://www.prisma.io/docs/orm/prisma-client/setup-and-configuration/instantiate-prisma-client)  
+[v7 Prisma Client API reference](https://www.prisma.io/docs/orm/reference/prisma-client-reference#datasourceurl)  
+[upgrade to orm7 doc](https://www.prisma.io/docs/orm/more/upgrade-guides/upgrading-versions/upgrading-to-prisma-7)  
+[redis in-house free-cloud instance link](https://cloud.redis.io/#/databases)  
+[Github issue raised for prisma - for PrismaClient fails to instantiate in ESM environment - and solving it with using adapters for particular dbs and connectionStrings required](https://github.com/prisma/prisma/issues/28670)
