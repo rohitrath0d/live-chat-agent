@@ -71,7 +71,7 @@ app.get('/api/health', (_req, res) => {
 
 
 // error handler 
-app.use(errorHandler);
+// app.use(errorHandler);
 
 
 // init socket connection
