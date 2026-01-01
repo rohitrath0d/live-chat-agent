@@ -11,13 +11,13 @@ async function getClient(): Promise<RedisClientType> {
     const REDIS_HOST = process.env.REDIS_HOST || 'localhost';
     const REDIS_PORT = Number(process.env.REDIS_PORT || 6379);
     const REDIS_USERNAME = process.env.REDIS_USERNAME || 'default';
-    const REDIS_PASSWORD = process.env.REDIS_PASSWORD;
+    const REDIS_PASSWORD = process.env.REDIS_PASSWORD || '';
 
     console.log('Creating Redis client with config:', {
       host: REDIS_HOST,
       port: REDIS_PORT,
       username: REDIS_USERNAME,
-      password: REDIS_PASSWORD ? '****' : '(not set)',
+      password: REDIS_PASSWORD,
     });
 
     client = createClient({
