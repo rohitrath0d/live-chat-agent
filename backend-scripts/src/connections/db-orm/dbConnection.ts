@@ -3,7 +3,7 @@
 // import {PrismaClient} from '@prisma/client';  -- but this doesnt work 
 
 // If you use custom output path, the import changes:
-import "dotenv/config"
+// import "dotenv/config"
 import { PrismaClient } from '../../prisma/generated/prisma/client.js';
 import { PrismaPg } from '@prisma/adapter-pg';
 

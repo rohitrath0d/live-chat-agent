@@ -1,4 +1,9 @@
-import 'dotenv/config';
+// import 'dotenv/config';
+if (process.env.NODE_ENV !== 'production') {
+  await import('dotenv/config');          // only loads locally
+}
+
+
 import express from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
