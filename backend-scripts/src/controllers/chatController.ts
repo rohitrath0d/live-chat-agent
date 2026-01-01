@@ -1,5 +1,9 @@
 import type { Request, Response } from 'express';
-import { generate, streamGenerate } from '../services/llm-service.js'; // LLM Service
+import { 
+  generate,
+  // generate, 
+  // streamGenerate 
+} from '../services/llm-service.js'; // LLM Service
 import { appendMessage, getHistory, clearSession } from '../connections/cache/redis-client.js'; // Redis Client
 
 interface ChatRequestBody {
@@ -11,7 +15,7 @@ interface ChatRequestBody {
 // POST /api/chat - non-streaming chat
 export const chat = async (req: Request<{}, {}, ChatRequestBody>, res: Response) => {
   try {
-    const { sessionId, message } = req.body || {};
+    const { sessionId, message } = req.body;
 
     // Validate input
     if (!sessionId || !message) {
@@ -32,6 +36,7 @@ export const chat = async (req: Request<{}, {}, ChatRequestBody>, res: Response)
 
     // Generate a response using the LLM (e.g., Gemini)
     const answer = await generate(prompt);
+    // const answer = await streamGenerate(prompt);
 
     // Save assistant's reply in Redis
     const assistantMessage = { role: 'assistant', content: answer };
@@ -39,14 +44,14 @@ export const chat = async (req: Request<{}, {}, ChatRequestBody>, res: Response)
 
     // Return the assistant's reply to the client
     return res.json({ message: answer });
-  } catch (err) {
+  } catch (err: any) {
     console.error("<------- Chat error: ------>", err);
     return res.status(500).json({ error: err?.message || 'Unknown error' });
   }
 };
 
 // GET /api/session/:sessionId - fetch chat history
-export const getSessionHistory = async (req: Request, res: Response) => {
+export const getSessionHistory = async (req: Request<{ sessionId: string }, {}, {}>, res: Response) => {
   try {
     const { sessionId } = req.params;
 
@@ -57,14 +62,14 @@ export const getSessionHistory = async (req: Request, res: Response) => {
     const history = await getHistory(sessionId);
 
     return res.json({ sessionId, history });
-  } catch (err) {
+  } catch (err: any) {
     console.error("<------- Error fetching history: ---------->", err);
     return res.status(500).json({ error: err?.message || 'Unknown error' });
   }
 };
 
 // DELETE /api/session/:sessionId - clear chat history
-export const clearChatHistory = async (req: Request, res: Response) => {
+export const clearChatHistory = async (req: Request<{ sessionId: string }, {}, {}>, res: Response) => {
   try {
     const { sessionId } = req.params;
 
@@ -75,14 +80,14 @@ export const clearChatHistory = async (req: Request, res: Response) => {
     const cleared = await clearSession(sessionId);
 
     return res.json({ sessionId, cleared });
-  } catch (err) {
+  } catch (err: any) {
     console.error("<------------ Error clearing session: ------------->", err);
     return res.status(500).json({ error: err?.message || 'Unknown error' });
   }
 };
 
 // Helper function to build the LLM prompt from the history and new message
-async function buildPrompt(history: any[], userMessage: string): Promise<string> {
+export async function buildPrompt(history: any[], userMessage: string): Promise<string> {
   const historyMessages = history.map((msg) => ({
     role: msg.role === 'user' ? 'user' : 'assistant',
     content: msg.content,

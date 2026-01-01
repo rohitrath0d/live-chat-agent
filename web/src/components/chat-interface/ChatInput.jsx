@@ -1,14 +1,35 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Send } from "lucide-react";
+import { sendMessage } from "@/utils/api";
+import { toast } from "sonner";
 
-const ChatInput = ({ onSend, disabled }) => {
+const ChatInput = ({ sessionId, setIsLoading, disabled, onMessageSent }) => {
   const [message, setMessage] = useState("");
 
   const handleSend = () => {
-    if (message.trim() && !disabled) {
-      onSend(message.trim());
-      setMessage("");
+    try {
+      if (message.trim() && !disabled) {
+        const trimmedMessage = message.trim();
+
+        // Add user message to the chat via callback
+        if (onMessageSent) {
+          onMessageSent(trimmedMessage);
+        }
+
+        // Start the loading state for AI response
+        setIsLoading(true);
+
+        // Send the message to the backend through the socket
+        sendMessage(sessionId, trimmedMessage);
+
+        // Clear the message input after sending
+        setMessage("");
+      }
+    } catch (error) {
+      console.error("Error sending message:", error);
+      toast.error("Failed to send message. Please try again.");
+      setIsLoading(false);
     }
   };
 

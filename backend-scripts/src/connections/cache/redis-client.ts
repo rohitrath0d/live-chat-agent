@@ -1,16 +1,40 @@
-import 'dotenv/config'
 import { createClient } from 'redis';
 import type { RedisClientType } from 'redis';
-const REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379';
+
 const HISTORY_MAX = Number(process.env.HISTORY_MAX || 200);
 
-let client: RedisClientType | null = null; // RedisClientType is the type for the Redis client
+let client: RedisClientType | null = null;
 
 async function getClient(): Promise<RedisClientType> {
   if (!client) {
-    client = createClient({ url: REDIS_URL });
-    client.on('error', (err: string) => console.error('Redis Client Error', err));
+    // Read env vars at connection time (after dotenv has loaded)
+    const REDIS_HOST = process.env.REDIS_HOST || 'localhost';
+    const REDIS_PORT = Number(process.env.REDIS_PORT || 6379);
+    const REDIS_USERNAME = process.env.REDIS_USERNAME || 'default';
+    const REDIS_PASSWORD = process.env.REDIS_PASSWORD;
+
+    console.log('Creating Redis client with config:', {
+      host: REDIS_HOST,
+      port: REDIS_PORT,
+      username: REDIS_USERNAME,
+      password: REDIS_PASSWORD ? '****' : '(not set)',
+    });
+
+    client = createClient({
+      socket: {
+        host: REDIS_HOST,
+        port: REDIS_PORT,
+      },
+      username: REDIS_USERNAME,
+      ...(REDIS_PASSWORD && { password: REDIS_PASSWORD }),
+    });
+
+    client.on('error', (err) => console.error('Redis Client Error:', err));
+    client.on('connect', () => console.log('Redis client connecting...'));
+    client.on('ready', () => console.log('Redis client ready!'));
+
     await client.connect();
+    console.log('Redis client connected successfully!');
   }
   return client;
 }
@@ -24,28 +48,24 @@ async function appendMessage(sessionId: string, messageObj: Record<string, any>)
   const c = await getClient();
   const key = keyFor(sessionId);
 
-  // Ensure the message is an object
   if (typeof messageObj === 'object') {
     await c.rPush(key, JSON.stringify(messageObj));
-
-    // Trim to max length to avoid unbounded growth
-    await c.lTrim(key, Math.max(-HISTORY_MAX, -HISTORY_MAX), -1);
-
+    await c.lTrim(key, -HISTORY_MAX, -1);
   }
 }
 
+// Get chat history from Redis
 async function getHistory(sessionId: string): Promise<unknown[]> {
   const c = await getClient();
   const key = keyFor(sessionId);
   const items = await c.lRange(key, 0, -1);
   const parsed: unknown[] = [];
 
-  for (const it of items) {
+  for (const item of items) {
     try {
-      parsed.push(JSON.parse(it));
+      parsed.push(JSON.parse(item));
     } catch (e) {
-      // ignore malformed entries
-      console.error('<------------ Malformed entry in history: ----------->', e);
+      console.error('Malformed entry in history:', e);
     }
   }
   return parsed;
@@ -63,5 +83,5 @@ export {
   getClient,
   appendMessage,
   getHistory,
-  clearSession
+  clearSession,
 };

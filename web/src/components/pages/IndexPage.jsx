@@ -1,57 +1,42 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import ChatPanel from "@/components/chat-interface/ChatPanel";
 import ChatInput from "@/components/chat-interface/ChatInput";
 import { MessageSquare } from "lucide-react";
 
+// Generate a unique session ID
+const generateSessionId = () => {
+  return `session_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
+};
+
 const Index = () => {
-  const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [sessionId, setSessionId] = useState(null);
 
-  const generateId = () => Math.random().toString(36).substring(2, 9);
+  // Store the addUserMessage function from ChatPanel
+  const chatPanelRef = useRef(null);
 
-  const formatTime = () => {
-    return new Date().toLocaleTimeString([], { 
-      hour: "2-digit", 
-      minute: "2-digit" 
-    });
-  };
-
-  const simulateAIResponse = useCallback(async (userMessage) => {
-    setIsLoading(true);
-    
-    // Simulate network delay
-    await new Promise((resolve) => setTimeout(resolve, 1500 + Math.random() * 1000));
-    
-    const responses = [
-      "That's an interesting point! Let me think about that...",
-      "I understand what you're asking. Here's my perspective on this.",
-      "Great question! Based on my analysis, I would suggest...",
-      "Thanks for sharing that. I'd be happy to help you explore this further.",
-      "I've processed your message. Here's what I think would work best.",
-    ];
-    
-    const aiMessage = {
-      id: generateId(),
-      content: responses[Math.floor(Math.random() * responses.length)],
-      isUser: false,
-      timestamp: formatTime(),
-    };
-    
-    setMessages((prev) => [...prev, aiMessage]);
-    setIsLoading(false);
+  // Initialize session ID on mount
+  useEffect(() => {
+    // Check if session already exists in localStorage
+    let storedSessionId = localStorage.getItem("chatSessionId");
+    if (!storedSessionId) {
+      storedSessionId = generateSessionId();
+      localStorage.setItem("chatSessionId", storedSessionId);
+    }
+    setSessionId(storedSessionId);
   }, []);
 
-  const handleSend = useCallback((content) => {
-    const userMessage = {
-      id: generateId(),
-      content,
-      isUser: true,
-      timestamp: formatTime(),
-    };
-    
-    setMessages((prev) => [...prev, userMessage]);
-    simulateAIResponse(content);
-  }, [simulateAIResponse]);
+  // Callback from ChatPanel when it's ready with its methods
+  const handleChatPanelReady = useCallback((methods) => {
+    chatPanelRef.current = methods;
+  }, []);
+
+  // Handler for when user sends a message
+  const handleMessageSent = useCallback((content) => {
+    if (chatPanelRef.current?.addUserMessage) {
+      chatPanelRef.current.addUserMessage(content);
+    }
+  }, []);
 
   return (
     <div className="flex flex-col h-screen bg-background">
@@ -67,12 +52,23 @@ const Index = () => {
       </header>
 
       {/* Chat Panel */}
-      <ChatPanel messages={messages} isLoading={isLoading} />
+      <ChatPanel
+        sessionId={sessionId}
+        isLoading={isLoading}
+        setIsLoading={setIsLoading}
+        onReady={handleChatPanelReady}
+      />
 
       {/* Input */}
-      <ChatInput onSend={handleSend} disabled={isLoading} />
+      <ChatInput
+        sessionId={sessionId}
+        setIsLoading={setIsLoading}
+        disabled={isLoading}
+        onMessageSent={handleMessageSent}
+      />
     </div>
   );
 };
 
 export default Index;
+

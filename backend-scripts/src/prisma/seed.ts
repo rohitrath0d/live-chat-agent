@@ -1,4 +1,4 @@
-import  {prisma} from '../src/connections/db-orm/dbConnection.js'; 
+import  {prisma} from '../connections/db-orm/dbConnection.js'; 
 // import { PrismaClient } from '../prisma/generated/prisma/client.js';
 
 async function main() {

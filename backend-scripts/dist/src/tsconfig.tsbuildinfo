@@ -1,0 +1,1 @@
+{"root":["../../src/runserver.ts","../../src/connections/cache/redis-client.ts","../../src/connections/db-orm/dbconnection.ts","../../src/controllers/chatcontroller.ts","../../src/routes/chatroutes.ts","../../src/services/llm-service.ts","../../prisma.config.ts"],"version":"5.9.3"}

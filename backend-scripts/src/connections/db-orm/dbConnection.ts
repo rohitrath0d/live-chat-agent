@@ -4,7 +4,7 @@
 
 // If you use custom output path, the import changes:
 import "dotenv/config"
-import { PrismaClient } from '../../../prisma/generated/client.js';
+import { PrismaClient } from '../../prisma/generated/prisma/client.js';
 import { PrismaPg } from '@prisma/adapter-pg';
 
 
@@ -41,7 +41,7 @@ async function main() {
 
   // Insert FAQ entries into the database
   for (const faq of faqs) {
-    await prisma.faq.create({
+    await prisma.fAQ.create({
       data: faq,
     });
   }
