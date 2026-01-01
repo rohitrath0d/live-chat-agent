@@ -24,8 +24,7 @@ async function getClient(): Promise<RedisClientType> {
       socket: {
         host: REDIS_HOST,
         port: REDIS_PORT,
-        tls: false,   // important for Redis Cloud - t- deploy on TLS port - for production use
-        rejectUnauthorized: false
+        tls: false   // important for Redis Cloud - t- deploy on TLS port - for production use
       },
       username: REDIS_USERNAME,
       password: REDIS_PASSWORD,
