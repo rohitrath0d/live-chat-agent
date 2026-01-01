@@ -24,9 +24,11 @@ async function getClient(): Promise<RedisClientType> {
       socket: {
         host: REDIS_HOST,
         port: REDIS_PORT,
+        tls: true,   // important for Redis Cloud - t- deploy on TLS port - for production use
       },
       username: REDIS_USERNAME,
-      ...(REDIS_PASSWORD && { password: REDIS_PASSWORD }),
+      password: REDIS_PASSWORD,
+      // ...(REDIS_PASSWORD && { password: REDIS_PASSWORD }),
     });
 
     client.on('error', (err) => console.error('Redis Client Error:', err));
